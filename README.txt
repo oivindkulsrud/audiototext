@@ -1,5 +1,8 @@
+# intro
+Script to do audio to text from the terminal. Developed and tested on the mac but probably works fine on linux as well.
 
-# Install ffmpeg
+
+# Install ffmpeg and portaudio
 
 brew install ffmpeg
 brew install portaudio
@@ -13,7 +16,7 @@ maybe portaudio? not sure
 poetry install
 
 # run the app
-poetry run python secondapp.py
+poetry run python app.py
 
 # make the runner executable
 chmod +x app_runner_macos
