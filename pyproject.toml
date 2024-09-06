@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "audiototext"
+version = "0.1.0"
+description = "audio transcription using open source and openai models"
+authors = ["Oivind Thorsen Kulsrud <oivind.thorsen.kulsrud@nav.no>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "0.28"
+pydub = "^0.25.1"
+pyaudio = "^0.2.14"
+pyperclip = "^1.9.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
