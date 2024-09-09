@@ -23,3 +23,7 @@ chmod +x app_runner_macos
 you can then drag the app_runner_macos file to your dock and run it from there
 
 (you also need to make the terminal app you use close automatically on exit, or at least you should consider it)
+
+# compile applescript
+osacompile -o TalkPaste.app dictation_with_paste.applescript
+fileicon set TalkPaste.app /System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/ToolbarMicrophone.icns

@@ -1,0 +1,11 @@
+# Get the directory of the current script
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Change to the script's directory
+cd "$DIR" || exit
+
+poetry run python app.py
+osascript -e 'tell application "System Events" to keystroke tab using {command down}'
+delay 0.2
+osascript -e 'tell application "System Events" to keystroke "v" using {command down}'
+exit 0
