@@ -103,7 +103,7 @@ def transcribe_with_local_whisper(audio_path):
 
     print("Transcribing with local Faster-Whisper...")
     model = WhisperModel("large-v3", compute_type="int8")
-    segments, _ = model.transcribe(audio_path)
+    segments, _ = model.transcribe(audio_path, language="en")
     return " ".join(segment.text for segment in segments)
 
 # Transcribe using selected method
