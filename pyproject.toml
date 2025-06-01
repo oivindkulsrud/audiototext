@@ -5,6 +5,7 @@ description = "audio transcription using open source and openai models"
 authors = ["Oivind Thorsen Kulsrud <oivind.thorsen.kulsrud@nav.no>"]
 license = "MIT"
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
