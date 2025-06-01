@@ -30,20 +30,6 @@ sudo apt-get install ffmpeg portaudio19-dev
 poetry install
 ```
 
-*If you get an error about missing `README.md`, create it with:*
-
-```sh
-touch README.md
-```
-
-*Or use:*
-
-```sh
-poetry install --no-root
-```
-
-*Or add `package-mode = false` to your `pyproject.toml` if you only need dependencies.*
-
 # Run the app
 
 ```sh
