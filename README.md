@@ -7,6 +7,31 @@ You want the step-by-step guide integrated into your provided format, including 
 
 Script to do audio to text from the terminal. Developed and tested on Mac, but likely works fine on Linux as well.
 
+# OpenAI API Key Setup
+
+This application requires an OpenAI API key for the audio transcription. The application specifically looks for an environment variable named `OPENAI_API_KEY`. You can set it up in one of two ways:
+
+1. Set an environment variable:
+```sh
+export OPENAI_API_KEY="your-api-key-here"
+```
+OR:
+
+2. Create a `.env` file in the project root:
+```sh
+echo "OPENAI_API_KEY=your-api-key-here" > .env
+```
+
+A `.env.example` file is provided in the repository as a template. You can copy it and add your actual API key:
+```sh
+cp .env.example .env
+# Then edit .env with your actual API key
+```
+
+*Note: Make sure not to commit your `.env` file to version control. Add it to your `.gitignore` file.*
+
+*Important: The application will not work without a valid OpenAI API key set with the exact variable name `OPENAI_API_KEY`.*
+
 # Install ffmpeg and portaudio
 
 **macOS:**

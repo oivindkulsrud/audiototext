@@ -6,6 +6,10 @@ import os
 import ffmpeg
 import time
 import pyperclip
+from dotenv import load_dotenv
+
+# Load environment variables from .env file if it exists
+load_dotenv()
 
 p = pyaudio.PyAudio()
 
@@ -71,6 +75,10 @@ except ffmpeg.Error as e:
     exit(1)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
+    print("Error: OPENAI_API_KEY not found in environment variables or .env file")
+    print("Please set your OpenAI API key as described in the README")
+    exit(1)
 
 print("Transcribing audio")
 with open("output.mp3", "rb") as audio_file:
