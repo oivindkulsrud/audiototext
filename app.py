@@ -4,7 +4,7 @@ import wave
 import io
 import openai
 import os
-from pydub import AudioSegment
+import ffmpeg
 import time
 import pyperclip
 
@@ -59,8 +59,17 @@ with wave.open("output.wav", "wb") as wf:
     wf.writeframes(b''.join(frames))
 
 print("Converting WAV to MP3")
-audio = AudioSegment.from_wav("output.wav")
-audio.export("output.mp3", format="mp3")
+try:
+    # Use ffmpeg to convert WAV to MP3
+    (
+        ffmpeg
+        .input("output.wav")
+        .output("output.mp3")
+        .run(capture_stdout=True, capture_stderr=True, quiet=True, overwrite_output=True)
+    )
+except ffmpeg.Error as e:
+    print(f"FFmpeg error: {e.stderr.decode()}")
+    exit(1)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
