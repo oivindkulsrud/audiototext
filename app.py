@@ -22,6 +22,7 @@ load_dotenv()
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Record and transcribe audio.")
 parser.add_argument("--local", action="store_true", help="Use local Faster-Whisper instead of OpenAI")
+parser.add_argument("--language", type=str, default="en", help="Language code for transcription (default: en)")
 args = parser.parse_args()
 
 # Setup audio config
@@ -101,9 +102,9 @@ def transcribe_with_local_whisper(audio_path):
         print("Error: faster-whisper not installed. Run `pip install faster-whisper`.")
         exit(1)
 
-    print("Transcribing with local Faster-Whisper...")
+    print(f"Transcribing with local Faster-Whisper (language: {args.language})...")
     model = WhisperModel("large-v3", compute_type="int8")
-    segments, _ = model.transcribe(audio_path, language="en")
+    segments, _ = model.transcribe(audio_path, language=args.language)
     return " ".join(segment.text for segment in segments)
 
 # Transcribe using selected method
