@@ -1,7 +1,6 @@
 import threading
 import pyaudio
 import wave
-import io
 import openai
 import os
 import ffmpeg
