@@ -1,7 +1,3 @@
-**Summary:**
-You want the step-by-step guide integrated into your provided format, including both macOS and Linux installation instructions.
-
----
 
 # Intro
 
