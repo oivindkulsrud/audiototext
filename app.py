@@ -64,6 +64,9 @@ stream.stop_stream()
 stream.close()
 p.terminate()
 
+current_directory = os.getcwd()
+print("Current directory:", current_directory)
+
 # Save WAV file
 with wave.open("output.wav", "wb") as wf:
     wf.setnchannels(CHANNELS)
@@ -92,9 +95,9 @@ def transcribe_with_openai(audio_path):
         exit(1)
 
     openai.api_key = api_key
-    print("Transcribing with OpenAI (gpt-4o-transcribe)...")
+    print("Transcribing with OpenAI (whisper-1)...")
     with open(audio_path, "rb") as audio_file:
-        transcript = openai.Audio.transcribe("gpt-4o-transcribe", audio_file)
+        transcript = openai.Audio.transcribe("whisper-1", audio_file)
     return transcript["text"]
 
 def transcribe_with_local_whisper(audio_path):

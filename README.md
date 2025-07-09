@@ -40,6 +40,11 @@ sudo apt-get install ffmpeg portaudio19-dev
 ```
 
 *Note: On Linux, you may need to use `portaudio19-dev` for Python bindings to build correctly.*
+**Windows10:**
+
+```sh
+choco install ffmpeg-full
+```
 
 # Install Python packages
 
