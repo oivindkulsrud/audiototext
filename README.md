@@ -56,7 +56,7 @@ poetry run python app.py
 
 *Follow the prompts to record audio and get the transcription.*
 
-# Make the runner executable (macOS only)
+# Make the runner executable
 
 ```sh
 chmod +x app_runner_macos
