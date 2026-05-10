@@ -1,23 +1,22 @@
-[tool.poetry]
+[project]
 name = "audiototext"
 version = "0.1.0"
-description = "audio transcription using open source and openai models"
-authors = ["Oivind Thorsen Kulsrud <oivind.thorsen.kulsrud@nav.no>"]
+description = "Audio transcription using open source and OpenAI models"
+authors = [
+    { name = "Oivind Thorsen Kulsrud", email = "oivind.thorsen.kulsrud@nav.no" },
+]
 license = "MIT"
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.12"
+dependencies = [
+    "openai==0.28",
+    "pydub>=0.25.1,<0.26.0",
+    "pyaudio>=0.2.14,<0.3.0",
+    "pyperclip>=1.9.0,<2.0.0",
+    "ffmpeg-python>=0.2.0,<0.3.0",
+    "python-dotenv>=1.1.0,<2.0.0",
+    "faster-whisper>=1.1.1,<2.0.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-openai = "0.28"
-pydub = "^0.25.1"
-pyaudio = "^0.2.14"
-pyperclip = "^1.9.0"
-ffmpeg-python = "^0.2.0"
-python-dotenv = "^1.1.0"
-faster-whisper = "^1.1.1"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv]
+package = false

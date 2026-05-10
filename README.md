@@ -7,15 +7,30 @@ Script to do audio to text from the terminal. Developed and tested on Mac, but l
 
 This application requires an OpenAI API key for the audio transcription. You can set it up in one of two ways:
 
-1. Set an environment variable:
-```sh
+**macOS/Linux:**
+
+```bash
 export OPENAI_API_KEY="your-api-key-here"
 ```
-OR:
 
-2. Create a `.env` file in the project root:
-```sh
+**Windows PowerShell:**
+
+```powershell
+$env:OPENAI_API_KEY="your-api-key-here"
+```
+
+OR create a `.env` file in the project root:
+
+**macOS/Linux:**
+
+```bash
 echo "OPENAI_API_KEY=your-api-key-here" > .env
+```
+
+**Windows PowerShell:**
+
+```powershell
+Set-Content .env "OPENAI_API_KEY=your-api-key-here"
 ```
 
 *Note: Make sure not to commit your `.env` file to version control. Add it to your `.gitignore` file.*
@@ -39,23 +54,51 @@ sudo apt-get install ffmpeg portaudio19-dev
 
 **Windows10:**
 
-```sh
+```powershell
 choco install ffmpeg-full
+```
+
+Or with winget:
+
+```powershell
+winget install Gyan.FFmpeg
+```
+
+After installing ffmpeg on Windows, open a new PowerShell window so the updated `PATH` is loaded.
+
+# Install uv
+
+**Windows PowerShell:**
+
+```powershell
+winget install astral-sh.uv
+```
+
+**macOS/Linux:**
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 # Install Python packages
 
-```sh
-poetry install
+```bash
+uv sync
 ```
 
 # Run the app
 
-```sh
-poetry run python app.py
+```bash
+uv run python app.py
 ```
 
 *Follow the prompts to record audio and get the transcription.*
+
+# Run with local Whisper
+
+```bash
+uv run python app.py --local --language en
+```
 
 # Make the runner executable
 
