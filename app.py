@@ -78,8 +78,6 @@ if args.list_devices:
     p.terminate()
     exit(0)
 
-print("Recording... Press Enter to stop.")
-
 try:
     stream = p.open(
         format=FORMAT,
@@ -97,6 +95,8 @@ except OSError as e:
 
 sample_width = p.get_sample_size(FORMAT)
 is_recording = True
+
+print("Recording... Press Enter to stop.")
 
 def record_audio():
     global is_recording
