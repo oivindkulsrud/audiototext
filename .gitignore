@@ -1,5 +1,6 @@
 .env
 .idea
+debug_recordings/
 TalkPaste.app/Contents/_CodeSignature/CodeResources
 
 TalkPaste.app/Contents/

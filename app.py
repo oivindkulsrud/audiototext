@@ -7,6 +7,10 @@ import ffmpeg
 import time
 import argparse
 import pyperclip
+import shutil
+from array import array
+from datetime import datetime
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Optional: Faster-Whisper import
@@ -23,6 +27,34 @@ load_dotenv()
 parser = argparse.ArgumentParser(description="Record and transcribe audio.")
 parser.add_argument("--local", action="store_true", help="Use local Faster-Whisper instead of OpenAI")
 parser.add_argument("--language", type=str, default="en", help="Language code for transcription (default: en)")
+parser.add_argument(
+    "--debug-save-recording",
+    action="store_true",
+    help="Save a timestamped copy of the recorded MP3 before cleanup",
+)
+parser.add_argument(
+    "--debug-recording-dir",
+    type=Path,
+    default=Path("debug_recordings"),
+    help="Directory for --debug-save-recording files (default: debug_recordings)",
+)
+parser.add_argument(
+    "--list-devices",
+    action="store_true",
+    help="List available audio input devices and exit",
+)
+parser.add_argument(
+    "--input-device-index",
+    type=int,
+    default=None,
+    help="PyAudio input device index to use for recording",
+)
+parser.add_argument(
+    "--gain-db",
+    type=float,
+    default=0.0,
+    help="Apply audio gain during MP3 conversion, for example --gain-db 12",
+)
 args = parser.parse_args()
 
 # Setup audio config
@@ -33,9 +65,37 @@ RATE = 44100
 CHUNK = 8192
 frames = []
 
+def list_input_devices():
+    print("Available audio input devices:")
+    for index in range(p.get_device_count()):
+        device = p.get_device_info_by_index(index)
+        if int(device.get("maxInputChannels", 0)) > 0:
+            default_marker = " (default)" if index == p.get_default_input_device_info().get("index") else ""
+            print(f"  {index}: {device.get('name')}{default_marker}")
+
+if args.list_devices:
+    list_input_devices()
+    p.terminate()
+    exit(0)
+
 print("Recording... Press Enter to stop.")
 
-stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+try:
+    stream = p.open(
+        format=FORMAT,
+        channels=CHANNELS,
+        rate=RATE,
+        input=True,
+        input_device_index=args.input_device_index,
+        frames_per_buffer=CHUNK,
+    )
+except OSError as e:
+    print(f"Could not open microphone: {e}")
+    list_input_devices()
+    p.terminate()
+    exit(1)
+
+sample_width = p.get_sample_size(FORMAT)
 is_recording = True
 
 def record_audio():
@@ -67,25 +127,43 @@ p.terminate()
 current_directory = os.getcwd()
 print("Current directory:", current_directory)
 
+samples = array("h")
+samples.frombytes(b"".join(frames))
+if samples:
+    peak = max(abs(sample) for sample in samples)
+    rms = (sum(sample * sample for sample in samples) / len(samples)) ** 0.5
+    print(f"Recorded level: peak {peak / 32768:.1%}, rms {rms / 32768:.1%}")
+    if peak < 500:
+        print("Recorded signal is very low. Try another MIC index or raise Windows input volume.")
+
 # Save WAV file
 with wave.open("output.wav", "wb") as wf:
     wf.setnchannels(CHANNELS)
-    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setsampwidth(sample_width)
     wf.setframerate(RATE)
     wf.writeframes(b''.join(frames))
 
 # Convert to MP3
 print("Converting WAV to MP3...")
 try:
-    (
-        ffmpeg
-        .input("output.wav")
-        .output("output.mp3")
-        .run(capture_stdout=True, capture_stderr=True, quiet=True, overwrite_output=True)
-    )
+    audio = ffmpeg.input("output.wav")
+    if args.gain_db:
+        audio = audio.filter("volume", f"{args.gain_db}dB")
+    audio.output("output.mp3").run(capture_stdout=True, capture_stderr=True, quiet=True, overwrite_output=True)
+except FileNotFoundError:
+    print("FFmpeg executable not found. Install ffmpeg and open a new terminal so PATH is updated.")
+    print("Windows: winget install Gyan.FFmpeg")
+    exit(1)
 except ffmpeg.Error as e:
     print(f"FFmpeg error: {e.stderr.decode()}")
     exit(1)
+
+if args.debug_save_recording:
+    args.debug_recording_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    debug_audio_path = args.debug_recording_dir / f"recording_{timestamp}.mp3"
+    shutil.copy2("output.mp3", debug_audio_path)
+    print(f"Saved debug recording: {debug_audio_path}")
 
 # Define transcribers
 def transcribe_with_openai(audio_path):
