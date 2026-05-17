@@ -94,6 +94,19 @@ uv run python app.py
 
 *Follow the prompts to record audio and get the transcription.*
 
+# GNOME keyboard shortcut
+
+To launch the recorder from GNOME keyboard shortcuts with Ptyxis, paste this command into the keyboard manager:
+
+```bash
+ptyxis --new-window \
+  --title 'Audio Recorder' \
+  --working-directory /home/klsrd/cb/software/audiototext \
+  -- bash -lc 'uv run python app.py'
+```
+
+The terminal window closes automatically when the app exits.
+
 # Run with local Whisper
 
 ```bash

@@ -1,4 +1,4 @@
-.PHONY: run debug local microphones
+.PHONY: run debug local microphones inst install-deps-ubuntu install-deps-fedora install-deps-macos
 
 PYTHON ?= uv run python
 ARGS ?=
@@ -18,3 +18,16 @@ local:
 
 microphones:
 	$(PYTHON) app.py --list-devices
+
+inst:
+	@echo "Use one of: make install-deps-ubuntu, make install-deps-fedora, make install-deps-macos"
+
+install-deps-ubuntu:
+	sudo apt-get update
+	sudo apt-get install -y ffmpeg portaudio19-dev
+
+install-deps-fedora:
+	sudo dnf install -y ffmpeg portaudio-devel
+
+install-deps-macos:
+	brew install ffmpeg portaudio
