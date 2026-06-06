@@ -50,7 +50,13 @@ brew install portaudio
 sudo apt-get install ffmpeg portaudio19-dev
 ```
 
-*Note: On Linux, you may need to use `portaudio19-dev` for Python bindings to build correctly.*
+**Linux (Fedora):**
+
+```sh
+sudo dnf install ffmpeg portaudio-devel
+```
+
+*Note: On Linux, you may need the PortAudio development package for Python bindings to build correctly. On Debian/Ubuntu this is `portaudio19-dev`; on Fedora this is `portaudio-devel`.*
 
 **Windows10:**
 
