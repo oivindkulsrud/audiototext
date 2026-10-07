@@ -1,9 +1,11 @@
-.PHONY: run debug local microphones inst install-deps-ubuntu install-deps-fedora install-deps-macos
+.PHONY: run debug local microphones inst install-deps-ubuntu install-deps-fedora install-deps-macos install-shortcut-fedora
 
 PYTHON ?= uv run python
 ARGS ?=
 MIC ?=
 GAIN ?=
+SHORTCUT ?= <Control><Alt><Shift><Super>less
+export SHORTCUT
 MIC_ARG = $(if $(MIC),--input-device-index $(MIC),)
 GAIN_ARG = $(if $(GAIN),--gain-db $(GAIN),)
 
@@ -28,6 +30,9 @@ install-deps-ubuntu:
 
 install-deps-fedora:
 	sudo dnf install -y ffmpeg portaudio-devel
+
+install-shortcut-fedora:
+	/usr/bin/python3 scripts/install_shortcut_fedora.py
 
 install-deps-macos:
 	brew install ffmpeg portaudio

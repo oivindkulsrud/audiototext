@@ -102,16 +102,47 @@ uv run python app.py
 
 # GNOME keyboard shortcut
 
+On Fedora GNOME, install **Hyper+<** for the current user with:
+
+```bash
+make install-shortcut-fedora
+```
+
+Run this from your desktop session, without `sudo`. Requires Ptyxis (`sudo dnf install ptyxis`), uv, and Fedora's system Python with PyGObject (`sudo dnf install python3-gobject`). It launches this checkout, preserves existing shortcuts, and updates the same entry when rerun.
+
+The default binding is `<Control><Alt><Shift><Super>less`, matching a Hyper key that sends Ctrl+Alt+Shift+Super. If your keyboard uses GNOME's separate Hyper modifier, use:
+
+```bash
+make install-shortcut-fedora SHORTCUT='<Hyper>less'
+```
+
+The target registers the shortcut; your Hyper key must already be configured. You can override `SHORTCUT` with any other [GTK accelerator](https://docs.gtk.org/gtk4/func.accelerator_parse.html).
+
 To launch the recorder from GNOME keyboard shortcuts with Ptyxis, paste this command into the keyboard manager:
 
 ```bash
 ptyxis --new-window \
   --title 'Audio Recorder' \
   --working-directory /home/klsrd/cb/software/audiototext \
-  -- bash -lc 'uv run python app.py'
+  -- /usr/bin/env UV_BIN=/home/linuxbrew/.linuxbrew/bin/uv \
+  /bin/bash /home/klsrd/cb/software/audiototext/app_runner_fedora
 ```
 
-The terminal window closes automatically when the app exits.
+Adjust `UV_BIN` to your uv executable (`command -v uv`). Rerun
+`make install-shortcut-fedora` to update an existing installed shortcut, or replace
+its command with the launcher command above.
+
+The global `DEBUG_MODE` variable in `app_runner_fedora` defaults to `false`, so
+the terminal closes automatically. Set `DEBUG_MODE=true` to enable debugging.
+In debug mode, after the recorder exits, it opens an interactive shell in the same terminal so
+logs and tracebacks remain visible, including failures in uv or Python startup.
+Type `exit` to close the terminal.
+Python output is unbuffered so logs appear as they are written.
+
+If `OPENAI_API_KEY` is missing from the shortcut's environment, the Fedora launcher
+sources `~/.config/personal-pc-secrets-filen/main_machine.sh` when readable and
+exports the key to Python. An existing environment key takes precedence. The app
+also supports a project `.env` file as described above.
 
 # Run with local Whisper
 

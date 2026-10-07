@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Set to false to close the terminal automatically after the recorder exits.
+DEBUG_MODE="${DEBUG_MODE:-false}"
+UV_BIN="${UV_BIN:-uv}"
+
+finish() {
+    local status=$?
+    trap - EXIT
+    if [[ "$DEBUG_MODE" == true && -t 0 ]]; then
+        printf '\nRecorder exited with status %s. Debug mode: type exit to close this terminal.\n' "$status"
+        /bin/bash -i
+    fi
+    exit "$status"
+}
+trap finish EXIT
+
+if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+    secrets_file="$HOME/.config/personal-pc-secrets-filen/main_machine.sh"
+    if [[ -r "$secrets_file" ]]; then
+        # Never enable shell tracing here: this file contains secrets.
+        source "$secrets_file" || exit "$?"
+    fi
+fi
+if [[ -n "${OPENAI_API_KEY:-}" ]]; then
+    export OPENAI_API_KEY
+fi
+
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")" || exit 1
+"$UV_BIN" run python -u app.py "$@"

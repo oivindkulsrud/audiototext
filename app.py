@@ -199,7 +199,6 @@ print("\nTranscription:\n")
 print(transcript_text.strip())
 pyperclip.copy(transcript_text.strip())
 print("\n✅ Copied to clipboard.")
-
 # Clean up
 os.remove("output.wav")
 os.remove("output.mp3")
